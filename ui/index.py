@@ -1,33 +1,16 @@
 import streamlit as st
-import pandas as pd
-#import io
-import os
 
+# Record audio using st.audio_input
+audio_data = st.audio_input("Record your audio")
 
-def message():
-    
-    print("user input received")
+if audio_data is not None:
+    # The returned audio_data is an UploadedFile object
+    # Read the audio data into bytes
+    audio_bytes = audio_data.read()
 
-ref = st.audio_input("Record your voice", key="user_voice", help="record voice", on_change=message, args=None, kwargs=None, disabled=False, label_visibility="visible")
+    # Save the audio data to a file
+    with open("recorded_audio.wav", "wb") as f:
+        f.write(audio_bytes)
 
-print("*****\n")
-print(type(ref))
-print("*****\n")
-print(ref)
-print("*****\n")
-
-
-file_path = "hacknyu2025"
-
-save_dir = "recorded_audio"
-if not os.path.exists(file_path):
-    os.makedirs(file_path)
-if ref:
-    with open(file_path, "wb") as file:
-        file.write(ref) 
-    
-    # Show success message and audio player
-    st.success(f"Audio saved to {file}")
-    st.audio(file_path)
-    
- 
+    # Optionally, play the recorded audio
+    st.audio(audio_bytes, format='audio/wav')
